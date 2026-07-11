@@ -7,16 +7,22 @@ class DiceFace extends StatelessWidget {
     required this.size,
     this.index = 0,
     this.isPlaceholder = false,
+    this.rollingFrame,
   });
 
   final int value;
   final double size;
   final int index;
   final bool isPlaceholder;
+  final int? rollingFrame;
 
   @override
   Widget build(BuildContext context) {
     final face = value < 1 || value > 6 ? 1 : value;
+    final frame = rollingFrame?.clamp(1, 3);
+    final assetPath = frame == null
+        ? 'assets/images/dice_$face.png'
+        : 'assets/images/dice_roll_$frame.png';
 
     return Semantics(
       label: '骰子 ${index + 1}，点数 $value',
@@ -26,7 +32,7 @@ class DiceFace extends StatelessWidget {
         child: Opacity(
           opacity: isPlaceholder ? 0.52 : 1,
           child: Image.asset(
-            'assets/images/dice_$face.png',
+            assetPath,
             fit: BoxFit.contain,
             filterQuality: FilterQuality.high,
             gaplessPlayback: true,

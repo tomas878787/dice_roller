@@ -57,6 +57,7 @@ class DiceBoard extends StatelessWidget {
                         size: faceSize,
                         index: index,
                         isPlaceholder: values.isEmpty && !isRolling,
+                        rollingFrame: _rollingFrame(index),
                       ),
                     ),
                   ),
@@ -77,5 +78,12 @@ class DiceBoard extends StatelessWidget {
       return values[index];
     }
     return 1;
+  }
+
+  int? _rollingFrame(int index) {
+    if (!isRolling) {
+      return null;
+    }
+    return ((animationValue * 12).floor() + index) % 3 + 1;
   }
 }
