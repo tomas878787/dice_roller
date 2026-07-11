@@ -1,15 +1,19 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:go_router/go_router.dart';
 import 'package:signals_flutter/signals_flutter.dart';
 
+import '../services/dice_sound_player.dart';
 import '../state/dice_game_store.dart';
 import '../widgets/dice_board.dart';
 
 class DiceScreen extends StatefulWidget {
-  const DiceScreen({super.key, required this.store});
+  const DiceScreen({super.key, required this.store, this.soundPlayer});
 
   final DiceGameStore store;
+  final DiceSoundPlayer? soundPlayer;
 
   @override
   State<DiceScreen> createState() => _DiceScreenState();
@@ -19,10 +23,14 @@ class _DiceScreenState extends State<DiceScreen>
     with SingleTickerProviderStateMixin {
   late final AnimationController _controller;
   late final Animation<double> _curve;
+  late final DiceSoundPlayer _soundPlayer;
+  late final bool _ownsSoundPlayer;
 
   @override
   void initState() {
     super.initState();
+    _ownsSoundPlayer = widget.soundPlayer == null;
+    _soundPlayer = widget.soundPlayer ?? AudioplayersDiceSoundPlayer();
     _controller = AnimationController(
       vsync: this,
       duration: const Duration(milliseconds: 650),
@@ -34,6 +42,10 @@ class _DiceScreenState extends State<DiceScreen>
   void dispose() {
     if (widget.store.isRolling.value) {
       widget.store.cancelRoll();
+    }
+    unawaited(_soundPlayer.stop());
+    if (_ownsSoundPlayer) {
+      _soundPlayer.dispose();
     }
     _controller.dispose();
     super.dispose();
@@ -50,7 +62,12 @@ class _DiceScreenState extends State<DiceScreen>
         widget.store.animationEnabled.value && !mediaQuery.disableAnimations;
 
     if (shouldAnimate) {
-      await _controller.forward(from: 0);
+      await _playRollSound();
+      try {
+        await _controller.forward(from: 0);
+      } finally {
+        await _stopRollSound();
+      }
       if (!mounted) {
         widget.store.cancelRoll();
         return;
@@ -59,6 +76,22 @@ class _DiceScreenState extends State<DiceScreen>
 
     widget.store.commitRoll();
     _controller.value = 0;
+  }
+
+  Future<void> _playRollSound() async {
+    try {
+      await _soundPlayer.playRoll();
+    } catch (error, stackTrace) {
+      reportDiceSoundError(error, stackTrace);
+    }
+  }
+
+  Future<void> _stopRollSound() async {
+    try {
+      await _soundPlayer.stop();
+    } catch (error, stackTrace) {
+      reportDiceSoundError(error, stackTrace);
+    }
   }
 
   @override
@@ -135,47 +168,6 @@ class _DiceScreenState extends State<DiceScreen>
           ),
         );
       },
-    );
-  }
-}
-
-
-class _StatusPill extends StatelessWidget {
-  const _StatusPill({
-    required this.icon,
-    required this.label,
-    required this.color,
-  });
-
-  final IconData icon;
-  final String label;
-  final Color color;
-
-  @override
-  Widget build(BuildContext context) {
-    return DecoratedBox(
-      decoration: BoxDecoration(
-        color: color.withValues(alpha: 0.1),
-        borderRadius: BorderRadius.circular(999),
-        border: Border.all(color: color.withValues(alpha: 0.24)),
-      ),
-      child: Padding(
-        padding: EdgeInsets.symmetric(horizontal: 12.r, vertical: 8.r),
-        child: Row(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            Icon(icon, size: 18.r, color: color),
-            SizedBox(width: 6.r),
-            Text(
-              label,
-              style: Theme.of(context).textTheme.labelLarge?.copyWith(
-                color: color,
-                fontWeight: FontWeight.w700,
-              ),
-            ),
-          ],
-        ),
-      ),
     );
   }
 }

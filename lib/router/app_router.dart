@@ -4,14 +4,16 @@ import 'package:go_router/go_router.dart';
 import '../screens/dice_screen.dart';
 import '../screens/history_screen.dart';
 import '../screens/settings_screen.dart';
+import '../services/dice_sound_player.dart';
 import '../state/dice_game_store.dart';
 
-GoRouter createAppRouter(DiceGameStore store) {
+GoRouter createAppRouter(DiceGameStore store, {DiceSoundPlayer? soundPlayer}) {
   return GoRouter(
     routes: [
       GoRoute(
         path: '/',
-        builder: (context, state) => DiceScreen(store: store),
+        builder: (context, state) =>
+            DiceScreen(store: store, soundPlayer: soundPlayer),
       ),
       GoRoute(
         path: '/history',

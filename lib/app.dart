@@ -3,15 +3,17 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:go_router/go_router.dart';
 
 import 'router/app_router.dart';
+import 'services/dice_sound_player.dart';
 import 'state/dice_game_store.dart';
 
 class DiceRollerApp extends StatelessWidget {
-  DiceRollerApp({super.key, DiceGameStore? store})
+  DiceRollerApp({super.key, DiceGameStore? store, this.soundPlayer})
     : store = store ?? DiceGameStore() {
-    router = createAppRouter(this.store);
+    router = createAppRouter(this.store, soundPlayer: soundPlayer);
   }
 
   final DiceGameStore store;
+  final DiceSoundPlayer? soundPlayer;
   late final GoRouter router;
 
   @override
