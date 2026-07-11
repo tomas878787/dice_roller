@@ -86,6 +86,27 @@ void main() {
     expect(find.textContaining('概率模式'), findsNothing);
   });
 
+  testWidgets('settings selected dice and target options use color only', (
+    tester,
+  ) async {
+    final store = DiceGameStore(generator: StubDiceGenerator())
+      ..setAnimationEnabled(false);
+
+    await tester.pumpWidget(
+      DiceRollerApp(store: store, soundPlayer: const SilentDiceSoundPlayer()),
+    );
+
+    await tester.tap(find.byTooltip('设置'));
+    await tester.pumpAndSettle();
+
+    expect(find.byIcon(Icons.check), findsNothing);
+
+    await tester.tap(find.byType(SwitchListTile).last);
+    await tester.pumpAndSettle();
+
+    expect(find.byIcon(Icons.check), findsNothing);
+  });
+
   testWidgets('history clear asks for confirmation', (tester) async {
     final store = DiceGameStore(generator: StubDiceGenerator())
       ..setAnimationEnabled(false);

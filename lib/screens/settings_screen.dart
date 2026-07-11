@@ -24,6 +24,7 @@ class SettingsScreen extends StatelessWidget {
                 _Section(
                   title: '骰子数量',
                   child: SegmentedButton<int>(
+                    selectedIcon: const SizedBox.shrink(),
                     segments: List.generate(
                       6,
                       (index) => ButtonSegment<int>(
@@ -67,6 +68,7 @@ class SettingsScreen extends StatelessWidget {
                   title: '目标点数',
                   enabled: probabilityOn,
                   child: SegmentedButton<int>(
+                    selectedIcon: const SizedBox.shrink(),
                     segments: List.generate(
                       6,
                       (index) => ButtonSegment<int>(
