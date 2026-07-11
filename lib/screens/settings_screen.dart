@@ -19,7 +19,7 @@ class SettingsScreen extends StatelessWidget {
           appBar: AppBar(title: const Text('设置')),
           body: SafeArea(
             child: ListView(
-              padding: EdgeInsets.fromLTRB(18.r, 10.r, 18.r, 24.r),
+              padding: EdgeInsets.fromLTRB(18.r, 10.r, 18.r, 10.r),
               children: [
                 _Section(
                   title: '骰子数量',

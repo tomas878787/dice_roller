@@ -195,16 +195,9 @@ class _DiceTablePanel extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return DecoratedBox(
-      decoration: BoxDecoration(
-        color: Colors.white.withValues(alpha: 0.08),
-        borderRadius: BorderRadius.circular(28.r),
-        border: Border.all(color: Colors.white.withValues(alpha: 0.12)),
-      ),
-      child: Padding(
-        padding: EdgeInsets.symmetric(horizontal: 18.r, vertical: 24.r),
-        child: child,
-      ),
+    return Padding(
+      padding: EdgeInsets.symmetric(horizontal: 18.r, vertical: 24.r),
+      child: child,
     );
   }
 }
@@ -222,34 +215,27 @@ class _ResultPanel extends StatelessWidget {
     return Semantics(
       liveRegion: true,
       label: hasResult ? '合计 ${store.total.value}' : '点击掷骰',
-      child: DecoratedBox(
-        decoration: BoxDecoration(
-          color: Colors.white.withValues(alpha: 0.1),
-          borderRadius: BorderRadius.circular(22.r),
-          border: Border.all(color: Colors.white.withValues(alpha: 0.16)),
-        ),
-        child: Padding(
-          padding: EdgeInsets.symmetric(horizontal: 18.r, vertical: 18.r),
-          child: Column(
-            children: [
-              Text(
-                hasResult ? '合计 ${store.total.value}' : '点击掷骰',
-                style: theme.textTheme.headlineMedium?.copyWith(
-                  fontWeight: FontWeight.w800,
-                  color: const Color(0xFFFFF7E8),
-                ),
+      child: Padding(
+        padding: EdgeInsets.symmetric(horizontal: 18.r, vertical: 18.r),
+        child: Column(
+          children: [
+            Text(
+              hasResult ? '合计 ${store.total.value}' : '点击掷骰',
+              style: theme.textTheme.headlineMedium?.copyWith(
+                fontWeight: FontWeight.w800,
+                color: const Color(0xFFFFF7E8),
               ),
-              SizedBox(height: 6.r),
-              Text(
-                hasResult
-                    ? '点数：${store.currentValues.value.join('、')}'
-                    : '结果会在动画结束后一次性公布',
-                style: theme.textTheme.bodyMedium?.copyWith(
-                  color: const Color(0xCCFFF7E8),
-                ),
+            ),
+            SizedBox(height: 6.r),
+            Text(
+              hasResult
+                  ? '点数：${store.currentValues.value.join('、')}'
+                  : '结果会在动画结束后一次性公布',
+              style: theme.textTheme.bodyMedium?.copyWith(
+                color: const Color(0xCCFFF7E8),
               ),
-            ],
-          ),
+            ),
+          ],
         ),
       ),
     );
