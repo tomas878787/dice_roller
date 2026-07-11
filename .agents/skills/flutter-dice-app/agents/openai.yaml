@@ -1,0 +1,7 @@
+interface:
+  display_name: "Flutter Dice App"
+  short_description: "Project-specific Flutter dice implementation guide"
+  default_prompt: "Use $flutter-dice-app to implement the Flutter dice app from the project design document."
+
+policy:
+  allow_implicit_invocation: true
