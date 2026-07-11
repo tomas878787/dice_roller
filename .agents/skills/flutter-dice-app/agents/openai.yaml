@@ -1,7 +1,7 @@
 interface:
-  display_name: "Flutter Dice App"
-  short_description: "Project-specific Flutter dice implementation guide"
-  default_prompt: "Use $flutter-dice-app to implement the Flutter dice app from the project design document."
+  display_name: "Flutter 掷骰子 App"
+  short_description: "当前 Flutter 掷骰子项目实现指南"
+  default_prompt: "使用 $flutter-dice-app 按项目设计文档实现或修改 Flutter 掷骰子 App。"
 
 policy:
   allow_implicit_invocation: true
