@@ -100,7 +100,6 @@ class _DiceScreenState extends State<DiceScreen>
                         child: Column(
                           crossAxisAlignment: CrossAxisAlignment.stretch,
                           children: [
-                            //_StatusStrip(store: store),
                             SizedBox(height: 22.r),
                             AnimatedBuilder(
                               animation: _curve,
@@ -140,42 +139,6 @@ class _DiceScreenState extends State<DiceScreen>
   }
 }
 
-class _StatusStrip extends StatelessWidget {
-  const _StatusStrip({required this.store});
-
-  final DiceGameStore store;
-
-  @override
-  Widget build(BuildContext context) {
-    final theme = Theme.of(context);
-    final probabilityOn = store.probabilityEnabled.value;
-
-    return Wrap(
-      spacing: 10.r,
-      runSpacing: 10.r,
-      children: [
-        _StatusPill(
-          icon: Icons.grid_view_rounded,
-          label: '${store.diceCount.value} 颗 D6',
-          color: theme.colorScheme.primary,
-        ),
-        if (probabilityOn)
-          _StatusPill(
-            icon: Icons.percent_rounded,
-            label:
-                '概率模式 · 目标 ${store.targetFace.value} · ${store.targetProbability.value}%',
-            color: theme.colorScheme.secondary,
-          )
-        else
-          _StatusPill(
-            icon: Icons.balance_rounded,
-            label: '公平随机',
-            color: const Color(0xFF64706B),
-          ),
-      ],
-    );
-  }
-}
 
 class _StatusPill extends StatelessWidget {
   const _StatusPill({
