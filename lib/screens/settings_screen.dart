@@ -175,9 +175,11 @@ class _Panel extends StatelessWidget {
       opacity: enabled ? 1 : 0.58,
       child: DecoratedBox(
         decoration: BoxDecoration(
-          color: Colors.white,
+          color: Theme.of(
+            context,
+          ).colorScheme.surfaceContainerHighest.withValues(alpha: 0.72),
           borderRadius: BorderRadius.circular(16.r),
-          border: Border.all(color: const Color(0xFFE4E7DF)),
+          border: Border.all(color: Colors.white.withValues(alpha: 0.1)),
         ),
         child: Padding(padding: EdgeInsets.all(16.r), child: child),
       ),

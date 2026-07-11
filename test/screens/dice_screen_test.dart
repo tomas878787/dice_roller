@@ -2,6 +2,7 @@ import 'package:dice_roller/app.dart';
 import 'package:dice_roller/models/dice_probability_config.dart';
 import 'package:dice_roller/services/dice_sound_player.dart';
 import 'package:dice_roller/state/dice_game_store.dart';
+import 'package:dice_roller/widgets/dice_face.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 
@@ -199,5 +200,42 @@ void main() {
       expect(find.text('掷骰子'), findsWidgets);
       expect(find.text('点击掷骰'), findsOneWidget);
     }
+  });
+
+  testWidgets('main screen uses a deep green table theme', (tester) async {
+    await tester.pumpWidget(
+      DiceRollerApp(
+        store: DiceGameStore(generator: StubDiceGenerator()),
+        soundPlayer: const SilentDiceSoundPlayer(),
+      ),
+    );
+    await tester.pumpAndSettle();
+
+    final context = tester.element(find.byType(Scaffold).first);
+    final theme = Theme.of(context);
+
+    expect(theme.scaffoldBackgroundColor, const Color(0xFF0D2827));
+    expect(theme.appBarTheme.backgroundColor, const Color(0xFF0D2827));
+  });
+
+  testWidgets('main screen keeps the dice area above the lower half', (
+    tester,
+  ) async {
+    addTearDown(() {
+      tester.view.resetPhysicalSize();
+      tester.view.resetDevicePixelRatio();
+    });
+    tester.view.physicalSize = const Size(390, 844);
+    tester.view.devicePixelRatio = 1;
+
+    await tester.pumpWidget(
+      DiceRollerApp(
+        store: DiceGameStore(generator: StubDiceGenerator()),
+        soundPlayer: const SilentDiceSoundPlayer(),
+      ),
+    );
+    await tester.pumpAndSettle();
+
+    expect(tester.getTopLeft(find.byType(DiceFace)).dy, lessThan(200));
   });
 }

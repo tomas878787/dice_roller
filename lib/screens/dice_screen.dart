@@ -118,56 +118,93 @@ class _DiceScreenState extends State<DiceScreen>
               SizedBox(width: 4.w),
             ],
           ),
-          body: SafeArea(
-            child: LayoutBuilder(
-              builder: (context, constraints) {
-                return SingleChildScrollView(
-                  padding: EdgeInsets.fromLTRB(20.r, 10.r, 20.r, 22.r),
-                  child: ConstrainedBox(
-                    constraints: BoxConstraints(
-                      minHeight: constraints.maxHeight - 32.r,
-                    ),
-                    child: Center(
-                      child: ConstrainedBox(
-                        constraints: const BoxConstraints(maxWidth: 560),
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.stretch,
-                          children: [
-                            SizedBox(height: 22.r),
-                            AnimatedBuilder(
-                              animation: _curve,
-                              builder: (context, child) {
-                                return DiceBoard(
-                                  diceCount: store.diceCount.value,
-                                  values: store.currentValues.value,
-                                  isRolling: isRolling,
-                                  animationValue: _curve.value,
-                                );
-                              },
-                            ),
-                            SizedBox(height: 24.r),
-                            _ResultPanel(store: store),
-                            SizedBox(height: 24.r),
-                            FilledButton.icon(
-                              onPressed: isRolling ? null : _roll,
-                              icon: Icon(
-                                isRolling
-                                    ? Icons.hourglass_top_rounded
-                                    : Icons.casino_rounded,
+          body: DecoratedBox(
+            decoration: const BoxDecoration(
+              gradient: LinearGradient(
+                begin: Alignment.topCenter,
+                end: Alignment.bottomCenter,
+                colors: [
+                  Color(0xFF16453F),
+                  Color(0xFF0F3432),
+                  Color(0xFF0D2827),
+                ],
+              ),
+            ),
+            child: SafeArea(
+              child: LayoutBuilder(
+                builder: (context, constraints) {
+                  return SingleChildScrollView(
+                    padding: EdgeInsets.fromLTRB(20.r, 10.r, 20.r, 22.r),
+                    child: ConstrainedBox(
+                      constraints: BoxConstraints(
+                        minHeight: constraints.maxHeight - 32.r,
+                      ),
+                      child: Align(
+                        alignment: Alignment.topCenter,
+                        child: ConstrainedBox(
+                          constraints: const BoxConstraints(maxWidth: 560),
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.stretch,
+                            children: [
+                              SizedBox(height: 28.r),
+                              _DiceTablePanel(
+                                child: AnimatedBuilder(
+                                  animation: _curve,
+                                  builder: (context, child) {
+                                    return DiceBoard(
+                                      diceCount: store.diceCount.value,
+                                      values: store.currentValues.value,
+                                      isRolling: isRolling,
+                                      animationValue: _curve.value,
+                                    );
+                                  },
+                                ),
                               ),
-                              label: Text(isRolling ? '掷骰中' : '掷骰子'),
-                            ),
-                          ],
+                              SizedBox(height: 22.r),
+                              _ResultPanel(store: store),
+                              SizedBox(height: 22.r),
+                              FilledButton.icon(
+                                onPressed: isRolling ? null : _roll,
+                                icon: Icon(
+                                  isRolling
+                                      ? Icons.hourglass_top_rounded
+                                      : Icons.casino_rounded,
+                                ),
+                                label: Text(isRolling ? '掷骰中' : '掷骰子'),
+                              ),
+                            ],
+                          ),
                         ),
                       ),
                     ),
-                  ),
-                );
-              },
+                  );
+                },
+              ),
             ),
           ),
         );
       },
+    );
+  }
+}
+
+class _DiceTablePanel extends StatelessWidget {
+  const _DiceTablePanel({required this.child});
+
+  final Widget child;
+
+  @override
+  Widget build(BuildContext context) {
+    return DecoratedBox(
+      decoration: BoxDecoration(
+        color: Colors.white.withValues(alpha: 0.08),
+        borderRadius: BorderRadius.circular(28.r),
+        border: Border.all(color: Colors.white.withValues(alpha: 0.12)),
+      ),
+      child: Padding(
+        padding: EdgeInsets.symmetric(horizontal: 18.r, vertical: 24.r),
+        child: child,
+      ),
     );
   }
 }
@@ -187,9 +224,9 @@ class _ResultPanel extends StatelessWidget {
       label: hasResult ? '合计 ${store.total.value}' : '点击掷骰',
       child: DecoratedBox(
         decoration: BoxDecoration(
-          color: Colors.white,
-          borderRadius: BorderRadius.circular(18.r),
-          border: Border.all(color: const Color(0xFFE4E7DF)),
+          color: Colors.white.withValues(alpha: 0.1),
+          borderRadius: BorderRadius.circular(22.r),
+          border: Border.all(color: Colors.white.withValues(alpha: 0.16)),
         ),
         child: Padding(
           padding: EdgeInsets.symmetric(horizontal: 18.r, vertical: 18.r),
@@ -199,7 +236,7 @@ class _ResultPanel extends StatelessWidget {
                 hasResult ? '合计 ${store.total.value}' : '点击掷骰',
                 style: theme.textTheme.headlineMedium?.copyWith(
                   fontWeight: FontWeight.w800,
-                  color: const Color(0xFF17201F),
+                  color: const Color(0xFFFFF7E8),
                 ),
               ),
               SizedBox(height: 6.r),
@@ -208,7 +245,7 @@ class _ResultPanel extends StatelessWidget {
                     ? '点数：${store.currentValues.value.join('、')}'
                     : '结果会在动画结束后一次性公布',
                 style: theme.textTheme.bodyMedium?.copyWith(
-                  color: const Color(0xFF65706B),
+                  color: const Color(0xCCFFF7E8),
                 ),
               ),
             ],

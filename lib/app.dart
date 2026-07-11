@@ -28,24 +28,29 @@ class DiceRollerApp extends StatelessWidget {
           routerConfig: router,
           theme: ThemeData(
             useMaterial3: true,
+            brightness: Brightness.dark,
             colorScheme: ColorScheme.fromSeed(
-              seedColor: const Color(0xFF0F766E),
-              primary: const Color(0xFF0F766E),
-              secondary: const Color(0xFFD97706),
-              surface: const Color(0xFFFAFAF7),
+              brightness: Brightness.dark,
+              seedColor: const Color(0xFF0D2827),
+              primary: const Color(0xFFF6B656),
+              secondary: const Color(0xFFFFD891),
+              surface: const Color(0xFF123431),
+              surfaceContainerHighest: const Color(0xFF1B4842),
             ),
-            scaffoldBackgroundColor: const Color(0xFFFAFAF7),
+            scaffoldBackgroundColor: const Color(0xFF0D2827),
             appBarTheme: const AppBarTheme(
               centerTitle: false,
-              backgroundColor: Color(0xFFFAFAF7),
-              foregroundColor: Color(0xFF17201F),
+              backgroundColor: Color(0xFF0D2827),
+              foregroundColor: Color(0xFFFFF7E8),
               elevation: 0,
             ),
             filledButtonTheme: FilledButtonThemeData(
               style: FilledButton.styleFrom(
+                backgroundColor: const Color(0xFFF6B656),
+                foregroundColor: const Color(0xFF18312D),
                 minimumSize: const Size.fromHeight(56),
                 shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(14.r),
+                  borderRadius: BorderRadius.circular(18.r),
                 ),
               ),
             ),

@@ -85,9 +85,11 @@ class _HistoryTile extends StatelessWidget {
 
     return DecoratedBox(
       decoration: BoxDecoration(
-        color: Colors.white,
+        color: Theme.of(
+          context,
+        ).colorScheme.surfaceContainerHighest.withValues(alpha: 0.72),
         borderRadius: BorderRadius.circular(14.r),
-        border: Border.all(color: const Color(0xFFE4E7DF)),
+        border: Border.all(color: Colors.white.withValues(alpha: 0.1)),
       ),
       child: Padding(
         padding: EdgeInsets.all(14.r),
