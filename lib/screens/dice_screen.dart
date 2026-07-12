@@ -33,7 +33,7 @@ class _DiceScreenState extends State<DiceScreen>
     _soundPlayer = widget.soundPlayer ?? AudioplayersDiceSoundPlayer();
     _controller = AnimationController(
       vsync: this,
-      duration: const Duration(milliseconds: 650),
+      duration: const Duration(milliseconds: 1050),
     );
     _curve = CurvedAnimation(parent: _controller, curve: Curves.easeOutBack);
   }
@@ -230,7 +230,7 @@ class _ResultPanel extends StatelessWidget {
             Text(
               hasResult
                   ? '点数：${store.currentValues.value.join('、')}'
-                  : '结果会在动画结束后一次性公布',
+                  : '',
               style: theme.textTheme.bodyMedium?.copyWith(
                 color: const Color(0xCCFFF7E8),
               ),

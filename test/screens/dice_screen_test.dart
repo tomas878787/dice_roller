@@ -38,6 +38,17 @@ class RecordingDiceSoundPlayer implements DiceSoundPlayer {
 }
 
 void main() {
+  Finder findDiceCupImage() {
+    return find.byWidgetPredicate((widget) {
+      if (widget is! Image) {
+        return false;
+      }
+      final image = widget.image;
+      return image is AssetImage &&
+          image.assetName == 'assets/images/dice_cup.png';
+    });
+  }
+
   testWidgets('main screen rolls dice and writes history', (tester) async {
     final store = DiceGameStore(generator: StubDiceGenerator())
       ..setAnimationEnabled(false);
@@ -57,6 +68,33 @@ void main() {
     await tester.pumpAndSettle();
 
     expect(find.textContaining('合计 4'), findsWidgets);
+  });
+
+  testWidgets('main screen shows the dice cup until roll result is revealed', (
+    tester,
+  ) async {
+    final store = DiceGameStore(generator: StubDiceGenerator());
+
+    await tester.pumpWidget(
+      DiceRollerApp(store: store, soundPlayer: const SilentDiceSoundPlayer()),
+    );
+
+    expect(findDiceCupImage(), findsOneWidget);
+    expect(find.byType(DiceFace), findsNothing);
+
+    await tester.tap(find.widgetWithText(FilledButton, '掷骰子'));
+    await tester.pump(const Duration(milliseconds: 100));
+
+    expect(store.isRolling.value, isTrue);
+    expect(findDiceCupImage(), findsOneWidget);
+    expect(find.byType(DiceFace), findsNothing);
+
+    await tester.pumpAndSettle();
+
+    expect(store.isRolling.value, isFalse);
+    expect(findDiceCupImage(), findsNothing);
+    expect(find.byType(DiceFace), findsOneWidget);
+    expect(find.text('合计 4'), findsOneWidget);
   });
 
   testWidgets('settings can change dice count and probability mode', (
@@ -257,6 +295,6 @@ void main() {
     );
     await tester.pumpAndSettle();
 
-    expect(tester.getTopLeft(find.byType(DiceFace)).dy, lessThan(200));
+    expect(tester.getTopLeft(findDiceCupImage()).dy, lessThan(200));
   });
 }

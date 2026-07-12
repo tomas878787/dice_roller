@@ -23,6 +23,21 @@ class DiceBoard extends StatelessWidget {
   Widget build(BuildContext context) {
     return LayoutBuilder(
       builder: (context, constraints) {
+        final shouldShowCup = isRolling || values.isEmpty;
+        if (shouldShowCup) {
+          final cupSize = math
+              .min(constraints.maxWidth, 280.0)
+              .clamp(170.0, 280.0);
+
+          return Center(
+            child: _DiceCup(
+              size: cupSize,
+              isShaking: isRolling,
+              animationValue: animationValue,
+            ),
+          );
+        }
+
         final columns = diceCount <= 3 ? diceCount : 3;
         final spacing = 14.r;
         final maxBoardWidth = math.min(constraints.maxWidth, 420.0);
@@ -85,5 +100,50 @@ class DiceBoard extends StatelessWidget {
       return null;
     }
     return ((animationValue * 12).floor() + index) % 3 + 1;
+  }
+}
+
+class _DiceCup extends StatelessWidget {
+  const _DiceCup({
+    required this.size,
+    required this.isShaking,
+    required this.animationValue,
+  });
+
+  final double size;
+  final bool isShaking;
+  final double animationValue;
+
+  @override
+  Widget build(BuildContext context) {
+    final shake = math.sin(animationValue * math.pi * 8);
+    final settle = math.sin(animationValue * math.pi);
+    final dx = isShaking ? shake * 12.r : 0.0;
+    final dy = isShaking ? -settle * 8.r : 0.0;
+    final rotation = isShaking ? shake * 0.1 : 0.0;
+    final scale = isShaking ? 1 + settle * 0.035 : 1.0;
+
+    return Semantics(
+      label: isShaking ? '骰盅晃动中' : '骰盅',
+      image: true,
+      child: Transform.translate(
+        offset: Offset(dx, dy),
+        child: Transform.rotate(
+          angle: rotation,
+          child: Transform.scale(
+            scale: scale,
+            child: SizedBox.square(
+              dimension: size,
+              child: Image.asset(
+                'assets/images/dice_cup.png',
+                fit: BoxFit.contain,
+                filterQuality: FilterQuality.high,
+                gaplessPlayback: true,
+              ),
+            ),
+          ),
+        ),
+      ),
+    );
   }
 }

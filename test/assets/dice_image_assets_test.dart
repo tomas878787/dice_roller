@@ -23,6 +23,29 @@ void main() {
     'assets/images/dice_roll_3.png',
   ];
 
+  test('dice cup image exists and has transparent corners', () async {
+    const path = 'assets/images/dice_cup.png';
+    final file = File(path);
+
+    expect(file.existsSync(), isTrue, reason: path);
+
+    final bytes = await file.readAsBytes();
+    final image = await decodeImage(bytes);
+    final byteData = await image.toByteData(format: ui.ImageByteFormat.rawRgba);
+
+    expect(byteData, isNotNull);
+
+    final transparentCorners = [
+      _alphaAt(byteData!, image.width, 0, 0),
+      _alphaAt(byteData, image.width, image.width - 1, 0),
+      _alphaAt(byteData, image.width, 0, image.height - 1),
+      _alphaAt(byteData, image.width, image.width - 1, image.height - 1),
+    ];
+
+    expect(transparentCorners, everyElement(0), reason: path);
+    image.dispose();
+  });
+
   test('dice image corners are transparent', () async {
     for (final path in diceImagePaths) {
       final bytes = await File(path).readAsBytes();

@@ -5,9 +5,18 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_test/flutter_test.dart';
 
 void main() {
-  testWidgets('DiceBoard passes rolling frame to dice while animating', (
-    tester,
-  ) async {
+  Finder findDiceCupImage() {
+    return find.byWidgetPredicate((widget) {
+      if (widget is! Image) {
+        return false;
+      }
+      final image = widget.image;
+      return image is AssetImage &&
+          image.assetName == 'assets/images/dice_cup.png';
+    });
+  }
+
+  testWidgets('DiceBoard shows the dice cup while animating', (tester) async {
     await tester.pumpWidget(
       _TestHost(
         child: DiceBoard(
@@ -19,10 +28,26 @@ void main() {
       ),
     );
 
-    final face = tester.widget<DiceFace>(find.byType(DiceFace));
+    expect(findDiceCupImage(), findsOneWidget);
+    expect(find.byType(DiceFace), findsNothing);
+  });
 
-    expect(face.value, 1);
-    expect(face.rollingFrame, 1);
+  testWidgets('DiceBoard shows the dice cup before any result exists', (
+    tester,
+  ) async {
+    await tester.pumpWidget(
+      _TestHost(
+        child: DiceBoard(
+          diceCount: 1,
+          values: const [],
+          isRolling: false,
+          animationValue: 0,
+        ),
+      ),
+    );
+
+    expect(findDiceCupImage(), findsOneWidget);
+    expect(find.byType(DiceFace), findsNothing);
   });
 
   testWidgets('DiceBoard leaves rolling frame empty when idle', (tester) async {
